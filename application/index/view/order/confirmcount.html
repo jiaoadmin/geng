@@ -1,0 +1,197 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link type="text/css" rel="stylesheet" href="css/style.css" />
+    <!--[if IE 6]>
+    <script src="js/iepng.js" type="text/javascript"></script>
+        <script type="text/javascript">
+           EvPNG.fix('div, ul, img, li, input, a'); 
+        </script>
+    <![endif]-->
+
+  <script type="text/javascript" src="js/n_nav.js"></script>
+     
+<title>尤洪</title>
+</head>
+<body>  
+
+{include file='public/top' /}
+<div class="i_bg">  
+  <div class="content mar_20">
+    <img src="__STATIC__/index/images/img2.jpg" />        
+  </div>
+    
+    <!--Begin 第二步：确认订单信息 Begin -->
+  <div class="content mar_20">
+    <div class="two_bg">
+      <div class="two_t">
+        <span class="fr"><a href="#">修改</a></span>商品列表
+      </div>
+      <table border="0" class="car_tab" style="width:1110px;" cellspacing="0" cellpadding="0">
+        <tr>
+          <td class="car_th" width="550">商品名称</td>
+          <td class="car_th" width="140">单价</td>
+          <td class="car_th" width="150">购买数量</td>
+          <td class="car_th" width="130">小计</td>
+        </tr>
+        {volist name='goodsInfo' id='v'}
+          {if condition="$key%2 eq 0"}
+            {assign name="val" value="" /}
+          {else /}
+            {assign name="val" value="car_tr" /}
+          {/if}
+        <tr goods_id='{$v.goods_id}' class="{$val} goods_id">
+          <td>
+            <div class="c_s_img">
+              <img src="__STATIC__/../goodsimg/{$v.goods_img}" width="73" height="73" />
+            </div>
+            {$v.goods_name}
+          </td>
+          <td align="center">{$v.self_price}</td>
+          <td align="center">{$v.buy_number}</td>
+          <td align="center" style="color:#ff4e00;">￥{$v.self_price*$v.buy_number}</td>
+        </tr>
+        {/volist}
+      </table>
+          
+      <div class="two_t">
+        <span class="fr"><a href="#">修改</a></span>收货人信息
+      </div>
+      <div style="border:1px solid gray;height:140px;overflow:auto;">
+        <br>
+        {volist name='addressInfo' id='v'}
+        <div>
+          <table border="0" class="peo_tab" style="width:1110px;" cellspacing="0" cellpadding="0">
+            <tr>
+              <td rowspan="2">
+                {if condition="$v['is_default'] eq 1"}
+                <input type="radio" value="{$v.address_id}" name="is_default" checked>
+                {else/}
+                <input type="radio" value="{$v.address_id}" name="is_default"  >
+                {/if}
+              </td>
+              <td class="p_td" width="160">用户名称</td>
+              <td width="395">{$v.address_name}</td>
+              <td class="p_td" width="160">联系方希</td>
+              <td width="395">{$v.address_tel}</td>
+            </tr>
+            <tr>
+              <td class="p_td">详细信息</td>
+              <td>{$v.province}{$v.city}{$v.area}{$v.address_detail}</td>
+              <td class="p_td">邮政编码</td>
+              <td>{$v.address_mail}</td>
+            </tr>
+          </table>
+        </div>
+        <br>
+        {/volist}
+      </div>
+          
+    <div class="two_t">
+      支付方式
+    </div>
+    <ul class="pay">
+      <li class="checked" pay_type="1">余额支付<div class="ch_img"></div></li>
+      <li pay_type="2">货到付款<div class="ch_img"></div></li>
+      <li pay_type="3">支付宝<div class="ch_img"></div></li>
+    </ul>  
+          
+    <div class="two_t">
+      其他信息
+    </div>
+      <table border="0" class="car_tab" style="width:1110px;" cellspacing="0" cellpadding="0">
+        <tr valign="top">
+          <td align="right" style="padding-right:0;"><b style="font-size:14px;">订单附言：</b></td>
+          <td style="padding-left:0;">
+            <textarea class="add_txt" id="order_text" style="width:860px; height:50px;"></textarea>
+          </td>
+        </tr>
+        <tr>
+          <td align="right" style="padding-right:0;"><b style="font-size:14px;">缺货处理：</b></td>
+          <td>
+            <label class="r_rad"><input type="checkbox" name="none" checked="checked" /></label><label class="r_txt" style="margin-right:50px;">等待所有商品备齐后再发</label>
+            <label class="r_rad"><input type="checkbox" name="none" /></label><label class="r_txt" style="margin-right:50px;">取下订单</label>
+            <label class="r_rad"><input type="checkbox" name="none" /></label><label class="r_txt" style="margin-right:50px;">与店主协商</label>
+          </td>
+        </tr>
+      </table>
+          
+      <table border="0" style="width:900px; margin-top:20px;" cellspacing="0" cellpadding="0">
+        <tr>
+          <td align="right">
+            商品总价: <font color="#ff4e00">￥{$countPrice}</font>
+          </td>
+        </tr>
+        <tr height="70">
+          <td align="right">
+            <b style="font-size:14px;">应付款金额：<span style="font-size:22px; color:#ff4e00;">￥{$countPrice}</span></b>
+          </td>
+        </tr>
+        <tr height="70">
+          <td align="right">
+            <a href="#" id="submitOrder"><img src="__STATIC__/index/images/btn_sure.gif" /></a>
+          </td>
+        </tr>
+      </table>    
+    </div>
+  </div>
+  <!--End 第二步：确认订单信息 End-->
+  
+<script>
+  $(function(){
+    layui.use(['form','layer'], function(){
+      var layer = layui.layer;
+      $(".pay").find('li').click(function(){
+        var _this=$(this);
+        // console.log(_this);
+        _this.addClass('checked');
+        _this.siblings('li').removeClass('checked');
+      })
+
+      //点击确认订单
+      $('#submitOrder').click(function(){
+        //获取购物车id
+        var goods_id='';
+        // console.log($('.goods_id'));
+        $(".goods_id").each(function(index){
+          goods_id+=$(this).attr('goods_id')+',';
+         
+        })
+        goods_id=goods_id.substr(0,goods_id.length-1);
+        // console.log(goods_id);
+        //获取收货地址id
+        var address_id;
+        $("input[name='is_default']").each(function(index){
+          if($(this).prop('checked')==true){
+            address_id=$(this).val();
+          }
+        })
+        // console.log(address_id);
+        //获取支付方式
+        var pay_type = $('.checked').attr('pay_type');
+        // console.log(pay_type);
+        //获取订单留言
+        var order_text=$('#order_text').val();
+        // console.log(order_text);
+        //向控制器传值
+        $.post(
+          "{:url('Order/confirmOrder')}",
+          {goods_id:goods_id,address_id:address_id,pay_type:pay_type,order_text:order_text},
+          function(res){
+            // console.log(res)
+            layer.msg(res.font,{icon:res.code});
+          }
+        )
+        ,'json'
+
+
+      })
+
+
+
+    })
+  })
+</script>
+    
+

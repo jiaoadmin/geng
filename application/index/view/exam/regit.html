@@ -1,0 +1,57 @@
+
+    <table>
+        <tr>
+            <td><h2>重置密码</h2></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>输入新密码：</td>
+            <td><input type="password" id="pwd" name="pwd"></td>
+            <td><span class="span"></span></td>
+        </tr>
+        <tr>
+            <td>确认新密码：</td>
+            <td><input type="password" id="pwd1" name="pwd1"></td>
+            <td><span class="span1"></span></td>
+        </tr>
+        <tr>
+            <td><button id="but">确认</button></td>
+            <td><button><a href="{:url('Exam/regit')}">取消</a></button></td>
+            <td><a href="{:url('Login/login')}">返回登录页面</a></td>
+        </tr>
+    </table>
+
+<script>
+    $(function(){
+        //点击确认
+        $(document).on('click','#but',function(){
+            var pwd=$('#pwd').val();
+            var pwd1= $('#pwd1').val();
+            var reg = /^\w{6,12}$/;
+            if(pwd!==pwd1){
+                $('.span1').text('确认密码与密码保持一致');
+                return false;
+            }else if(pwd==''){
+                $('.span').text('密码不能为空');
+                return false;
+            }else if(!reg.test(pwd)){
+                $('.span').text('密码为6到12位');
+            }
+            $.post(
+                "{:url('Exam/updo')}",
+                {pwd:pwd},
+                function(res){
+                    // console.log(res);
+                    layer.msg(res.font,{icon:res.code});
+                    if(res.code==1){
+                        location.href="{:url('Login/login')}";
+                    }
+                }
+                ,'json'
+            )
+
+        });
+    })
+</script>
+

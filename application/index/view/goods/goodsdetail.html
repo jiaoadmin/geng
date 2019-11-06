@@ -1,0 +1,388 @@
+<script type="text/javascript" src="__STATIC__/index/js/n_nav.js"></script>
+{include file='public/top' /}
+<div class="i_bg">
+    <div class="postion">
+        <span class="fl">全部 > 美妆个护 > 香水 > 迪奥 > 迪奥真我香水</span>
+    </div>    
+    <div class="content">
+        <input type="hidden" id="goods_id" value="{$goodsInfo['goods_id']}">            
+        <div id="tsShopContainer">
+            <div id="tsImgS">
+                <a href="__STATIC__/../goodsimg/{$goodsInfo.goods_img}" title="Images" class="MagicZoom" id="MagicZoom">
+                    <img src="__STATIC__/../goodsimg/{$goodsInfo.goods_img}" width="390" height="390" />
+                </a>
+                
+            </div>
+            <div id="tsPicContainer">
+                <div id="tsImgSArrL" onclick="tsScrollArrLeft()"></div>
+                <div id="tsImgSCon">
+                    <ul>
+                        {volist name="goodsInfo['goods_imgs']" id="v"}
+                        <li onclick="showPic(0)" rel="MagicZoom" class="tsSelectImg">
+                            <img src="__STATIC__/../goods_imgs/{$v}" tsImgS="__STATIC__/index/images/ps1.jpg" width="79" height="79" />
+                        </li>
+                        {/volist}
+                    </ul>
+                </div>
+                <div id="tsImgSArrR" onclick="tsScrollArrRight()"></div>
+            </div>
+            <img class="MagicZoomLoading" width="16" height="16" src="__STATIC__/index/images/loading.gif" alt="Loading..." />              
+        </div>
+        
+        <div class="pro_des">
+            <div class="des_name">
+                <p>{$goodsInfo.goods_name}</p>
+                “开业巨惠，北京专柜直供”，不光低价，“真”才靠谱！
+            </div>
+            <div class="des_price">
+                本店价格：<b>￥{$goodsInfo.self_price}</b><br />
+                消费积分：<span>{$goodsInfo.goods_score}R</span>
+            </div>
+            <div class="des_choice">
+                <span class="fl">型号选择：</span>
+                <ul>
+                    <li class="checked">30ml<div class="ch_img"></div></li>
+                    <li>50ml<div class="ch_img"></div></li>
+                    <li>100ml<div class="ch_img"></div></li>
+                </ul>
+            </div>
+            <div class="des_choice">
+                <span class="fl">颜色选择：</span>
+                <ul>
+                    <li>红色<div class="ch_img"></div></li>
+                    <li class="checked">白色<div class="ch_img"></div></li>
+                    <li>黑色<div class="ch_img"></div></li>
+                </ul>
+            </div>
+
+            <div class="des_share">
+                <div class="d_sh">
+                    分享
+                    <div class="d_sh_bg">
+                        <a href="#"><img src="__STATIC__/index/images/sh_1.gif" /></a>
+                        <a href="#"><img src="__STATIC__/index/images/sh_2.gif" /></a>
+                        <a href="#"><img src="__STATIC__/index/images/sh_3.gif" /></a>
+                        <a href="#"><img src="__STATIC__/index/images/sh_4.gif" /></a>
+                        <a href="#"><img src="__STATIC__/index/images/sh_5.gif" /></a>
+                    </div>
+                </div>
+                <div class="d_care"><a onclick="ShowDiv('MyDiv','fade')">关注商品</a></div>
+            </div>
+
+            <div class="des_join">
+                <div class="j_nums">
+                    <input type="text" value="1" id="buy_number" class="n_ipt" />
+                    <input type="button" id="more" class="n_btn_1" />
+                    <input type="button" id="less" class="n_btn_2" />   
+                </div>
+                <span>库存<font color="red" id="goods_num">{$goodsInfo['goods_num']}</font>件</span>
+                <span class="fl">
+                    <a id="addCart" >
+                        <img src="__STATIC__/index/images/j_car.png" />
+                    </a>
+                </span>
+            </div>            
+        </div>    
+        
+        <div class="s_brand">
+            <div class="s_brand_img"><img src="__STATIC__/index/images/sbrand.jpg" width="188" height="132" /></div>
+            <div class="s_brand_c"><a href="#">进入品牌专区</a></div>
+        </div>    
+        
+        
+    </div>
+    <div class="content mar_20">
+        <div class="l_history">
+            <div class="fav_t">用户还喜欢</div>
+            <ul>
+                <li>
+                    <div class="img"><a href="#"><img src="__STATIC__/index/images/his_1.jpg" width="185" height="162" /></a></div>
+                    <div class="name"><a href="#">Dior/迪奥香水2件套装</a></div>
+                    <div class="price">
+                        <font>￥<span>368.00</span></font> &nbsp; 18R
+                    </div>
+                </li>
+                <li>
+                    <div class="img"><a href="#"><img src="__STATIC__/index/images/his_2.jpg" width="185" height="162" /></a></div>
+                    <div class="name"><a href="#">Dior/迪奥香水2件套装</a></div>
+                    <div class="price">
+                        <font>￥<span>768.00</span></font> &nbsp; 18R
+                    </div>
+                </li>
+                <li>
+                    <div class="img"><a href="#"><img src="__STATIC__/index/images/his_3.jpg" width="185" height="162" /></a></div>
+                    <div class="name"><a href="#">Dior/迪奥香水2件套装</a></div>
+                    <div class="price">
+                        <font>￥<span>680.00</span></font> &nbsp; 18R
+                    </div>
+                </li>
+                <li>
+                    <div class="img"><a href="#"><img src="__STATIC__/index/images/his_4.jpg" width="185" height="162" /></a></div>
+                    <div class="name"><a href="#">Dior/迪奥香水2件套装</a></div>
+                    <div class="price">
+                        <font>￥<span>368.00</span></font> &nbsp; 18R
+                    </div>
+                </li>
+                <li>
+                    <div class="img"><a href="#"><img src="__STATIC__/index/images/his_5.jpg" width="185" height="162" /></a></div>
+                    <div class="name"><a href="#">Dior/迪奥香水2件套装</a></div>
+                    <div class="price">
+                        <font>￥<span>368.00</span></font> &nbsp; 18R
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="l_list">            
+            <div class="des_border">
+                <div class="des_tit">
+                    <ul>
+                        <li class="current">推荐搭配</li>
+                    </ul>
+                </div>
+                <div class="team_list">
+                    <div class="img"><a href="#"><img src="__STATIC__/index/images/mat_1.jpg" width="160" height="140" /></a></div>
+                    <div class="name"><a href="#">倩碧补水组合套装8折促销</a></div>
+                    <div class="price">
+                        <div class="checkbox"><input type="checkbox" name="zuhe" checked="checked" /></div>
+                        <font>￥<span>768.00</span></font> &nbsp; 18R
+                    </div>
+                </div>
+                <div class="team_icon"><img src="__STATIC__/index/images/jia_b.gif" /></div>
+                <div class="team_list">
+                    <div class="img"><a href="#"><img src="__STATIC__/index/images/mat_2.jpg" width="160" height="140" /></a></div>
+                    <div class="name"><a href="#">香奈儿邂逅清新淡香水50ml</a></div>
+                    <div class="price">
+                        <div class="checkbox"><input type="checkbox" name="zuhe" /></div>
+                        <font>￥<span>749.00</span></font> &nbsp; 18R
+                    </div>
+                </div>
+                <div class="team_icon"><img src="__STATIC__/index/images/jia_b.gif" /></div>
+                <div class="team_list">
+                    <div class="img"><a href="#"><img src="__STATIC__/index/images/mat_3.jpg" width="160" height="140" /></a></div>
+                    <div class="name"><a href="#">香奈儿邂逅清新淡香水50ml</a></div>
+                    <div class="price">
+                        <div class="checkbox"><input type="checkbox" name="zuhe" checked="checked" /></div>
+                        <font>￥<span>749.00</span></font> &nbsp; 18R
+                    </div>
+                </div>
+                <div class="team_icon"><img src="__STATIC__/index/images/equl.gif" /></div>
+                <div class="team_sum">
+                    套餐价：￥<span>1517</span><br />
+                    <input type="text" value="1" class="sum_ipt" /><br />
+                    <a href="#"><img src="__STATIC__/index/images/z_buy.gif" /></a> 
+                </div>
+                
+            </div>
+            <div class="des_border">
+                <div class="des_tit">
+                    <ul>
+                        <li class="current"><a href="#p_attribute">商品属性</a></li>
+                        <li><a href="#p_details">商品详情</a></li>
+                        <li><a href="#p_comment">商品评论</a></li>
+                    </ul>
+                </div>
+                <div class="des_con" id="p_attribute">
+                    
+                    <table border="0" align="center" style="width:100%; font-family:'宋体'; margin:10px auto;" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td>商品名称：迪奥香水</td>
+                        <td>商品编号：1546211</td>
+                        <td>品牌： 迪奥（Dior）</td>
+                        <td>上架时间：2015-09-06 09:19:09 </td>
+                      </tr>
+                      <tr>
+                        <td>商品毛重：160.00g</td>
+                        <td>商品产地：法国</td>
+                        <td>香调：果香调香型：淡香水/香露EDT</td>
+                        <td>&nbsp;</td>
+                      </tr>
+                      <tr>
+                        <td>容量：1ml-15ml </td>
+                        <td>类型：女士香水，Q版香水，组合套装</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                      </tr>
+                    </table>                                               
+                                            
+                        
+                </div>
+            </div>  
+            
+            <div class="des_border" id="p_details">
+                <div class="des_t">商品详情</div>
+                {$goodsInfo.goods_desc}
+               
+            </div>  
+            
+            <div class="des_border" id="p_comment">
+                <div class="des_t">商品评论</div>
+                
+                <table border="0" class="jud_tab" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="175" class="jud_per">
+                        <p>80.0%</p>好评度
+                    </td>
+                    <td width="300">
+                        <table border="0" style="width:100%;" cellspacing="0" cellpadding="0">
+                          <tr>
+                            <td width="90">好评<font color="#999999">（80%）</font></td>
+                            <td><img src="__STATIC__/index/images/pl.gif" align="absmiddle" /></td>
+                          </tr>
+                          <tr>
+                            <td>中评<font color="#999999">（20%）</font></td>
+                            <td><img src="__STATIC__/index/images/pl.gif" align="absmiddle" /></td>
+                          </tr>
+                          <tr>
+                            <td>差评<font color="#999999">（0%）</font></td>
+                            <td><img src="__STATIC__/index/images/pl.gif" align="absmiddle" /></td>
+                          </tr>
+                        </table>
+                    </td>
+                    <td width="185" class="jud_bg">
+                        购买过雅诗兰黛第六代特润精华露50ml的顾客，在收到商品才可以对该商品发表评论
+                    </td>
+                    <td class="jud_bg">您可对已购买商品进行评价<br /><a href="#"><img src="__STATIC__/index/images/btn_jud.gif" /></a></td>
+                  </tr>
+                </table>
+                
+                
+                                
+                <table border="0" class="jud_list" style="width:100%; margin-top:30px;" cellspacing="0" cellpadding="0">
+                  <tr valign="top">
+                    <td width="160"><img src="__STATIC__/index/images/peo1.jpg" width="20" height="20" align="absmiddle" />&nbsp;向死而生</td>
+                    <td width="180">
+                        颜色分类：<font color="#999999">粉色</font> <br />
+                        型号：<font color="#999999">50ml</font>
+                    </td>
+                    <td>
+                        产品很好，香味很喜欢，必须给赞。 <br />
+                        <font color="#999999">2015-09-24</font>
+                    </td>
+                  </tr>
+                  <tr valign="top">
+                    <td width="160"><img src="__STATIC__/index/images/peo2.jpg" width="20" height="20" align="absmiddle" />&nbsp;就是这么想的</td>
+                    <td width="180">
+                        颜色分类：<font color="#999999">粉色</font> <br />
+                        型号：<font color="#999999">50ml</font>
+                    </td>
+                    <td>
+                        送朋友，她很喜欢，大爱。 <br />
+                        <font color="#999999">2015-09-24</font>
+                    </td>
+                  </tr>
+                  <tr valign="top">
+                    <td width="160"><img src="__STATIC__/index/images/peo3.jpg" width="20" height="20" align="absmiddle" />&nbsp;墨镜墨镜</td>
+                    <td width="180">
+                        颜色分类：<font color="#999999">粉色</font> <br />
+                        型号：<font color="#999999">50ml</font>
+                    </td>
+                    <td>
+                        大家都说不错<br />
+                        <font color="#999999">2015-09-24</font>
+                    </td>
+                  </tr>
+                  <tr valign="top">
+                    <td width="160"><img src="__STATIC__/index/images/peo4.jpg" width="20" height="20" align="absmiddle" />&nbsp;那*****洋 <br /><font color="#999999">（匿名用户）</font></td>
+                    <td width="180">
+                        颜色分类：<font color="#999999">粉色</font> <br />
+                        型号：<font color="#999999">50ml</font>
+                    </td>
+                    <td>
+                        下次还会来买，推荐。<br />
+                        <font color="#999999">2015-09-24</font>
+                    </td>
+                  </tr>
+                </table>
+
+                    
+                    
+                <div class="pages">
+                    <a href="#" class="p_pre">上一页</a><a href="#" class="cur">1</a><a href="#">2</a><a href="#">3</a>...<a href="#">20</a><a href="#" class="p_pre">下一页</a>
+                </div>
+                
+            </div>
+            
+            
+        </div>
+    </div>
+
+    <script>
+        $(function(){
+            layui.use(['form','layer'], function(){
+                
+                //获取库存数量
+                var goods_num=$('#goods_num').text();
+                //点击加号
+                $('#more').click(function(){
+                    //获取到数量
+                    var buy_number=parseInt($('#buy_number').val());
+                    if(buy_number>=goods_num){
+                        $(this).prop('disabled',true);
+                        $(this).next('input').prop('disabled',false);
+                    }else{
+                        //点击加号使数量加1 
+                        buy_number=buy_number+1;
+                        //span中的值变成
+                        $('#buy_number').val(buy_number);
+                        $(this).next('input').prop('disabled',false);
+                    }
+                })
+
+                //点击减号
+                $('#less').click(function(){
+                    //获取到数量
+                    var buy_number=parseInt($('#buy_number').val());
+                    if(buy_number<=1){
+                        //假如购物车的数量小于等于1，将减号停止
+                        $(this).prop('disabled',true);
+                        $(this).prev('input').prop('disabled',false);
+                    }else{
+                        //点击加号使数量减1 
+                        buy_number=buy_number-1;
+                        //span中的值变成
+                        $('#buy_number').val(buy_number);
+                        $(this).prev('input').prop('disabled',false);
+                    }
+                })
+
+                //失去光标
+                $('#buy_number').blur(function(){
+                    //获取购买数量
+                    var buy_number=$('#buy_number').val();
+                    //正则验证
+                    var reg=/^[1-9]\d*$/;
+                   
+                    //判断是否符合正则 是否小于1  是否大于库存
+                    if(!reg.test(buy_number)){
+                        $('#buy_number').val(1);
+                    }else if(buy_number<=1){
+                        $('#buy_number').val(1);
+                    }else if(buy_number>=goods_num){
+                        $('#buy_number').val(goods_num);
+                    }
+                })
+
+                //加入购物车
+                $('#addCart').click(function(){
+                    //获取到商品id
+                    var goods_id=$('#goods_id').val();
+                    //购买数量
+                    var buy_number=$('#buy_number').val();
+                    
+                    //传值
+                    $.post(
+                        "{:url('Cart/cartAdd')}",
+                        {goods_id:goods_id,buy_number:buy_number},
+                        function(res){
+                            // console.log(res);
+                            layer.msg(res.font,{icon:res.code,time:1000});
+                        }
+                        ,'json'
+                    )
+
+
+                })
+
+            });//layui.use结尾
+        })
+    </script>

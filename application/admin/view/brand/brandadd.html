@@ -1,0 +1,116 @@
+<div style="padding: 15px; width:600px" width="600px">
+  <form class="layui-form" action="">
+    <div class="layui-form-item">
+      <label class="layui-form-label">品牌名称</label>
+      <div class="layui-input-block">
+        <input type="text" name="brand_name"  lay-verify="required|checkName" placeholder="请输入品牌名称" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+
+    <div class="layui-form-item">
+      <label class="layui-form-label">品牌网址</label>
+      <div class="layui-input-block">
+        <input type="text" name="brand_url"  lay-verify="required|url" placeholder="请输入品牌网址" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+
+    <div class="layui-form-item">
+      <label class="layui-form-label">logo</label>
+      <div class="layui-input-block">
+          <input type="hidden" name="brand_logo" id="brand_logo">
+          <button type="button" class="layui-btn" id="logo">
+            <i class="layui-icon">&#xe67c;</i>上传图片
+          </button>
+      </div>
+    </div>
+
+    <div class="layui-form-item">
+      <label class="layui-form-label">是否展示</label>
+      <div class="layui-input-block">
+        <input type="radio" name="brand_show" value="1" title="是">
+        <input type="radio" name="brand_show" value="2" title="否" checked>
+      </div>
+    </div>
+
+    <div class="layui-form-item">
+      <div class="layui-input-block">
+        <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+      </div>
+    </div>
+  </form>
+</div>
+<script>
+  $(function(){
+    layui.use(['form','upload','layer'],function(){
+        var form=layui.form;
+        var upload = layui.upload;
+        var layer = layui.layer;
+        //文件上传
+        var uploadInst = upload.render({
+            elem: '#logo' //绑定元素
+            ,url: "{:url('Brand/brandLogo')}" //上传接口
+            ,done: function(res){
+              // console.log(res);
+              layer.msg(res.font,{icon:res.code});
+              if(res.code==1){
+                // console.log(res.src)
+                $('#brand_logo').val(res.src);
+              }
+            }
+        });
+
+        //表单验证
+        form.verify({
+          checkName: function(value,item){
+            var reg = /^[\u2E80-\u9FFF]{2,4}$/;
+            var name_flag;
+            if(!reg.test(value)){
+              return "品牌名由2到4位汉字组成";
+            }else{
+              $.ajax({
+                url:"{:url('Brand/checkName')}",
+                method:'post',
+                data:{brand_name:value,type:1},
+                async:false,
+                success:function(res){
+                    //console.log(res);
+                    if(res == 'no'){
+                      name_flag = "品牌名称已存在";
+                    }
+                }
+              })
+                return name_flag;
+              }            
+          }
+        });
+
+        //监听提交
+        form.on('submit(formDemo)', function(data){
+
+            $.post(
+                "{:url('Brand/brandAdd')}",
+                data.field,
+                function(result){
+                  layer.msg(result.font,{icon:result.code});
+                  if(result.code==1){
+                       layer.open({
+                          type:1,
+                          content:'是否进入展示页面',
+                          btn:['进入','继续添加'],
+                          yes:function(index,layero){
+                            location.href="{:url('brand/brandlist')}";
+                          },
+                          btn2:function(index,layero){
+                            location.href="{:url('brand/brandadd')}";
+                          }
+                       })
+                  }
+                },
+                'json'
+            );
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });      
+    })
+  });
+</script>

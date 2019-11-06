@@ -1,0 +1,69 @@
+<form action="">
+   
+    <table>
+        <tr>
+            <td >用邮箱找回</td>
+            <td></td>
+        </tr>
+        <br>
+        <tr>
+            <td>电子邮箱</td>
+            <td>
+                <input type="text" id="email">
+                <span class="span" ></span>
+            </td>
+        </tr>
+        <tr>
+            <td rowspan="2"><button id="but">找回密码</button></td>
+        </tr>
+    </table>
+</form>
+
+<script>
+    $(function(){
+        layui.use('layer',function(){
+            //失去焦点事件
+            $(document).on('blur','#email',function(){
+                var _this=$(this);
+                var email= _this.val();
+                // console.log(email);
+                //写邮箱的验证正则式
+                var reg=/^\w+@\w+\.com$/;
+                if(email==''){
+                    $('.span').text('邮箱必填');
+                    // console.log($('.span'));
+                    return false;
+                }else if(!reg.test(email)){
+                    $('.span').text('请输入正确邮箱');
+                    return false;
+                }
+            });
+
+            //点击找回密码按钮
+            $(document).on('click','#but',function(){
+                //获取收件邮箱
+                var _email=$('#email').val();
+
+                $.ajax({
+                    type:"post",
+                    url:"{:url('Login/sendEmail')}",
+                    data:{email:_email,type:2},
+                    async:false,
+                    success:function(res){
+                        // console.log(res);
+                        mayer.msg(res.font,{icon:res.code});
+                        if(res.code==1){
+                            location.href('Exam/regit');
+                        }
+                    }
+
+                });
+                return false;
+            });
+
+            
+   
+
+        })
+    })
+</script>

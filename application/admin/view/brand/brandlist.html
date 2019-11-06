@@ -1,0 +1,104 @@
+<div style="padding: 15px; width:900px;height:250px;">  
+    <input type="text" id="brand_name">
+    <button id="search" value="搜索">搜索</button>
+  
+
+    <table id="test" lay-filter="test" class="layui-table" lay-size="lg"></table>
+
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </script>
+</div>
+<script>
+    $(function(){
+        layui.use(['table','layer'], function(){
+            var table = layui.table;
+            var layer = layui.layer;
+            //表格
+            table.render({
+                elem: '#test'                    
+                ,url: "{:url('Brand/brandInfo')}" //数据接口
+                ,page: {
+                      'curr':1,//默认从第几页开始
+                      'limit':2,//每页展示条数
+                      'limits':[1,2,3],//选择每页展示多少条
+                      'groups':2,//连续展示的页码                         
+                    }
+                ,cols: [[ //表头
+                    {field: 'brand_id', title: '品牌ID', width:80,align:'center',fixed: 'left'}
+                    ,{field: 'brand_name', title: '品牌名称', width:120 ,align:'center',edit:'text'}
+                    ,{field: 'brand_url', title: '品牌地址', width:140,align:'center',edit:'text'}
+                    ,{field: 'brand_logo', title: '品牌logo',height:250,align:'center',templet:function(d){
+                        return "<img src = '/brandLogo/"+d.brand_logo+"'>"
+                    }}
+                    ,{field: 'brand_show', title: '是否展示', width: 100,align:'center',}
+                    ,{field: 'create_time', title: '添加时间', width: 160,align:'center',}
+                    ,{field: 'right', title: '操作', width: 160,align:'center',toolbar :'#barDemo'}
+                ]]
+            });
+            //搜索
+            $("#search").click(function(){
+                //获取搜索框的值
+                var brand_name = $("#brand_name").val();
+                //console.log(brand_name);
+                //表格重载
+                table.reload('test',{
+                    where:{
+                        brand_name:brand_name,
+                    }
+                    ,page: {
+                        curr: 1 //重新从第 1 页开始
+                    } 
+                })
+            });
+
+            //即点即改
+            table.on('edit(test)',function(obj){
+                var value = obj.value
+                    ,brand_id = obj.data.brand_id
+                    ,field = obj.field;
+                    
+                $.post(
+                    "{:url('Brand/brandEditField')}",
+                    {value:value,brand_id:brand_id,field:field},
+                    function(res){
+                        layer.msg(res.font,{icon:res.code});
+                        table.reload('test');
+                    },
+                    'json'
+                );
+
+            });  
+
+            //监听头部工具栏
+            table.on('tool(test)', function(obj){ 
+                //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+                var brand_id = obj.data.brand_id; //获得当前行数据
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                if(layEvent === 'del'){ //删除
+                    layer.confirm('真的删除行么',{icon:3,title:'提示'}, function(index){
+                        $.post(
+                            "{:url('Brand/brandDel')}",
+                            {brand_id:brand_id},
+                            function(res){
+                                layer.msg(res.font,{icon:res.code});
+                                if(res.code == 1){
+                                    table.reload('test');
+                                }
+                            },
+                            'json'
+                        );
+                        layer.close(index);
+                        //向服务端发送删除指令
+                    });
+                }else if(layEvent === 'edit'){ //编辑
+                    location.href = "{:url('Brand/brandEdit')}?brand_id="+brand_id;
+                }
+            });              
+
+        });
+      
+    })
+
+</script>

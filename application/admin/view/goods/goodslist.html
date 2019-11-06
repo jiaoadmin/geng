@@ -1,0 +1,152 @@
+<div style="padding: 15px; width:1100px">
+    <!-- 搜索 -->
+    <form class="layui-form">      
+        <div class="layui-form-item"> 
+            <div class="layui-input-inline">
+              <input type="text" id="goods_name" placeholder="请输入要搜索的商品名字" autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-input-inline">
+                <select id="cate_id">
+                    <option value="">--请选择--</option>
+                    {volist name="info" id="v"}                   
+                    <option value="{$v.cate_id}">{:str_repeat('&nbsp;&nbsp;',$v['level']*3)}{$v.cate_name}</option>
+                    {/volist}                   
+                </select>                       
+            </div>
+            <div class="layui-input-inline">
+                <select id="brand_name">
+                    <option value="">--请选择--</option>
+                    {volist name="arr" id="v"}                
+                    <option value="{$v.brand_name}">{$v.brand_name}</option>
+                    {/volist}
+                </select>
+            </div> 
+
+            <div class="layui-input-inline">
+                <select id="is_up">
+                    <option value="">--请选择--</option>          
+                    <option value="1">上架</option>          
+                    <option value="2">下架</option>
+                </select>
+            </div>             
+            <button class="layui-btn layui-btn-normal" id="search" value="搜索">搜索</button>
+        </div>
+    </form>
+
+    <!-- 表格 -->
+    <table id="demo"  lay-filter="demo"></table>
+
+    <!-- 删除修改 -->
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </script>
+</div>
+<script>
+    $(function(){
+        layui.use(['table','layer','form'],function(){
+            var table = layui.table;
+            var layer = layui.layer;
+            var form = layui.form;
+            /*监听单元格编辑*/
+            table.render({
+                elem:'#demo' // id名
+                ,width:1200
+                ,url:"{:url('Goods/getGoodsInfo')}"//提交地址
+                ,page: true
+                ,limit: 3
+                ,limits: [1,2,3,4,5]
+                ,cols: [[ //表头
+                    {field: 'goods_id', title: '商品ID', width:80, sort: true, align:'center',fixed: 'left'}
+                    ,{field: 'goods_name', title: '商品名称', width:120, sort: true,align:'center',edit:'text'}
+                    ,{field: 'self_price', title: '本店售价', width:90, align:'center',edit:'text'}
+                    ,{field: 'market_price', title: '市场售价', width:90, align:'center',edit:'text'}
+                    ,{field: 'goods_num', title: '库存', width:70, align:'center',edit:'text'}
+                    ,{field: 'is_up', title: '是否上架', width:90, align:'center'}
+                    ,{field: 'is_new', title: '是否新品', width:90, align:'center'}
+                    ,{field: 'is_best', title: '是否精品', width:90, align:'center'}
+                    ,{field: 'is_hot', title: '是否热卖', width:90, align:'center'}
+                    ,{field: 'cate_name', title: '商品分类', align:'center',width:110}
+                    ,{field: 'brand_name', title: '商品品牌', align:'center',width:110}
+                    ,{field: 'right', title:'操作',align:'center',width:170, toolbar:'#barDemo'}
+                ]]
+            });
+          
+         
+            /**点击搜索 */
+
+            $("#search").click(function(){
+                //获取搜索框的值
+                var goods_name = $("#goods_name").val();
+                var cate_id = $("#cate_id").val();
+                var brand_name = $("#brand_name").val();
+                var is_up = $("#is_up").val();
+                // console.log(goods_name);
+                // console.log(cate_id);
+                // console.log(brand_name);
+                // console.log(is_up);
+                // 表格重载
+                table.reload('demo',{
+                    where:{
+                        goods_name:goods_name,cate_id:cate_id,brand_name:brand_name,is_up:is_up
+                    }
+                    ,page: {
+                        curr: 1 //重新从第 1 页开始
+                    } 
+                })
+            });
+
+             //即点即改
+            table.on('edit(demo)',function(obj){
+                var value = obj.value
+                    ,goods_id = obj.data.goods_id
+                    ,field = obj.field;
+                    
+                $.post(
+                    "{:url('Goods/goodsEditField')}",
+                    {value:value,goods_id:goods_id,field:field},
+                    function(res){
+                        layer.msg(res.font,{icon:res.code});
+                        table.reload('demo');
+                    },
+                    'json'
+                );
+
+            });  
+
+
+       
+
+            //监听头部工具栏
+            table.on('tool(demo)', function(obj){ 
+                //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+                var goods_id = obj.data.goods_id; //获得当前行数据
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                if(layEvent === 'del'){ //删除
+                    layer.confirm('真的删除行么',{icon:3,title:'提示'}, function(index){
+                        $.post(
+                            "{:url('Goods/goodsDel')}",
+                            {goods_id:goods_id},
+                            function(res){
+                                layer.msg(res.font,{icon:res.code});
+                                if(res.code == 1){
+                                    table.reload('demo');
+                                }
+                            },
+                            'json'
+                        );
+                        layer.close(index);
+                        //向服务端发送删除指令
+                    });
+                }else if(layEvent === 'edit'){ //编辑
+                    location.href = "{:url('Goods/goodsEdit')}?goods_id="+goods_id;
+                }
+            }); 
+            
+            
+            
+         
+        });
+
+    })
+</script>

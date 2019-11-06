@@ -1,0 +1,115 @@
+<!-- {/*内容主体区域*/} -->
+<div style="padding: 15px; width:500px">
+    <form class="layui-form" action="">
+        <input type="hidden" name="brand_logo" id="logo" value="{$brandInfo.brand_logo}">
+        <input type="hidden" name="brand_id" id="brand_id" value="{$brandInfo.brand_id}">
+        <div class="layui-form-item">
+            <label class="layui-form-label">品牌名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="brand_name" required lay-verify="required|checkName" value="{$brandInfo.brand_name}" placeholder="请输入品牌名称" autocomplete="off" class="layui-input">
+            </div><!--lay-verify="required"-->
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">品牌网址</label>
+            <div class="layui-input-block">
+                <input type="text" name="brand_url" required lay-verify="required|url" value="{$brandInfo.brand_url}" placeholder="请输入品牌网址" autocomplete="off" class="layui-input">
+            </div><!--lay-verify="required"-->
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">品牌logo</label>
+            <div class="layui-input-block">               
+                <button type="button" class="layui-btn" id="brand_logo">
+                    <i class="layui-icon">&#xe67c;</i>上传图片
+                </button>
+                <img src="/brandLogo/{$brandInfo.brand_logo}" alt="" width="50" height="50" id="img">                
+            </div>
+        </div>
+        
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">是否展示</label>
+            <div class="layui-input-block">
+                <?php if($brandInfo['brand_show']==1){ ?>
+                <input type="radio" name="brand_show" value="1" title="是" checked>
+                <input type="radio" name="brand_show" value="2" title="否">
+                <?php }else{?>
+                <input type="radio" name="brand_show" value="1" title="是">
+                <input type="radio" name="brand_show" value="2" title="否" checked>
+                <?php }?>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    $(function(){
+        layui.use(['form','layer','upload'],function (){
+            var form = layui.form;
+            var layer = layui.layer;
+            var upload = layui.upload;
+            //执行实例 上传文件
+            var brand_id = $('#brand_id').val();
+            
+            var uploadInst = upload.render({
+                elem: '#brand_logo' //绑定元素
+                ,url: "{:url('Brand/brandLogo')}?brand_id="+brand_id //上传接口
+                ,done: function(res){
+                    layer.msg(res.font,{icon:res.code});
+                    if (res.code==1) {
+                        $('#logo').val(res.src); 
+                        $('#img').prop("src","/brandLogo/"+res.src);                      
+                    }
+                }
+            });
+
+             //表单验证
+            form.verify({
+              checkName: function(value,item){
+                var reg = /^[a-z_]\w{3,11}$/i;
+                var name_flag;
+                if(!reg.test(value)){
+                  return "品牌名由4到12位字母、数字组成";
+                }else{
+                  $.ajax({
+                    url:"{:url('Brand/checkName')}",
+                    method:'post',
+                    data:{brand_name:value,type:2,brand_id:brand_id},
+                    async:false,
+                    success:function(res){
+                        //console.log(res);
+                        if(res == 'no'){
+                          name_flag = "品牌名称已存在";
+                        }
+                    }
+                  })
+                    return name_flag;
+                  }            
+              }
+            });
+
+            //监听提交
+            form.on('submit(formDemo)', function(data){
+                $.post(
+                    "{:url('Brand/brandEditDo')}",
+                    data.field,  //所有name值
+                    function(res){
+                        // console.log(res)
+                        layer.msg(res.font,{icon:res.code});
+                        if(res.code==1){                          
+                          location.href= "{:url('Brand/brandList')}";
+                        }
+                    },
+                    'json'
+                )
+                return false;
+            });
+        })
+
+    })
+</script>

@@ -1,0 +1,170 @@
+
+<div class="m_top_bg">
+    {include file="public/usertop" /}
+    </div>
+    <!--End Header End--> 
+    <div class="i_bg bg_color">
+        <!--Begin 用户中心 Begin -->
+        <div class="m_content">
+            {include file="public/userleft"}
+            <div class="m_right">
+        <p></p>
+       
+        <br><br>
+        <div class="mem_tit">
+        <a href="#"><img src="__STATIC__/index/images/add_ad.gif" /></a>
+        </div>
+        {/* 添加收货地址*/}
+         
+        <form action="" class="add_form"></form>
+        <table border="0" class="add_tab" style="width:930px;"  cellspacing="0" cellpadding="0">
+        <tr>
+            <td width="135" align="right">配送地区</td>
+            <td colspan="3" style="font-family:'宋体';">
+            <select class="area" id="province">
+                <option value="" selected="selected">--请选择--</option>
+               
+                {volist name='provinceInfo' id='v'}
+                
+                {if condition="$addressInfo['province'] eq $v['id']"}
+                    <option value="{$v.id}" selected>{$v.name}</option>
+                {else/}
+                    <option value="{$v.id}">{$v.name}</option>
+                {/if}
+                {/volist}
+            </select>
+            <select class="area" id="city">
+                <option value="" selected="selected">--请选择--</option>
+                {volist name='cityInfo' id='v'}
+                {if condition="$addressInfo['city'] eq $v['id']"}
+                    <option value="{$v.id}" selected>{$v.name}</option>
+                {else/}
+                    <option value="{$v.id}">{$v.name}</option>
+                {/if}
+                {/volist}
+            </select>
+            <select class="area" id="area">
+                <option value="" selected="selected">--请选择--</option>
+                {volist name='areaInfo' id='v'}
+                {if condition="$addressInfo['area'] eq $v['id']"}
+                    <option value="{$v.id}" selected>{$v.name}</option>
+                {else/}
+                    <option value="{$v.id}">{$v.name}</option>
+                {/if}
+                {/volist}
+            </select>
+                （必填）
+            </td>
+        </tr>
+        <tr>
+            <td align="right">收货人姓名</td>
+            <td style="font-family:'宋体';"><input type="text"  class="add_ipt" id="address_name" value="{$addressInfo.address_name}"/>（必填）</td>
+            <td align="right">联系电话</td>
+            <td style="font-family:'宋体';"><input type="text"  class="add_ipt" id="address_tel" value="{$addressInfo.address_tel}"/>（必填）</td>
+        </tr>
+
+        <tr>
+            <td align="right">详细地址</td>
+            <td style="font-family:'宋体';"><input type="text"  class="add_ipt" id="address_detail"value="{$addressInfo.address_detail}" />（必填）</td>
+            <td align="right">邮政编码</td>
+            <td style="font-family:'宋体';"><input type="text" class="add_ipt" id="address_mail" value="{$addressInfo.address_mail}"/></td>
+        </tr>
+        
+        <tr>
+            <td colspan="4">
+            是否设置为默认收货地址
+            {if condition="$addressInfo['is_default'] eq 1"}
+            <input type="checkbox" checked id="is_default">
+            {else/}
+            <input type="checkbox" id="is_default">
+            {/if}
+            </td>
+        </tr>
+        <input type="hidden" id="address_id" value="{$addressInfo.address_id}">
+        </table>
+        <p align="right">
+        <a href="#" id="upd_b"  class="add_b">修改</a>
+        </p>       
+        </div>
+    </div>
+      <!--End 用户中心 End--> 
+
+<script>
+$(function(){
+    layui.use('layer',function(){
+        var layer = layui.layer;
+        //三级联动
+        $(document).on('change','.area',function(){
+            var _this=$(this);
+            //获取option的value值
+            var id = _this.val();
+            var _option = "<option selected value='' >--请选择--</option>";
+            //获取点击的下面市区
+            _this.nextAll('select').html(_option);
+            //向控制器传值
+            $.post(
+                "{:url('Address/getArea')}",
+                {id:id},
+                function(res){
+                    if(res.code==1){
+                        for(var i in res['areaInfo']){
+                        _option+="<option value='"+res['areaInfo'][i]['id']+"'>" 
+                            +res['areaInfo'][i]['name']
+                            +"</option>";
+                        }
+                        _this.next('select').html(_option);
+                    }else{
+                        layer.msg(res.font,{icon:res.code});
+                    }
+                }
+                ,'json'
+            )
+        })
+    
+        //点击修改
+        $(document).on('click','#upd_b',function(){
+            // alert(111);、、
+            var obj={};
+            obj.province=$('#province').val();
+            obj.city=$('#city').val();
+            obj.area=$('#area').val();
+            obj.address_name=$('#address_name').val();
+            obj.address_tel=$('#address_tel').val();
+            obj.address_detail=$('#address_detail').val();
+            obj.address_mail=$('#address_mail').val();
+            var is_default=$('#is_default').prop('checked');
+            
+            if(is_default==true){
+                obj.is_default=1;
+            }else{
+                obj.is_default=2;
+            }
+            obj.address_id=$('#address_id').val();
+            // console.log(obj);
+            //验证
+            if((obj.province)==''){
+                layer.msg('请选择完整的配送地区');
+                return false;
+            }
+            $.post(
+                "{:url('Address/addressUpdate')}",
+                obj,
+                function(res){
+                 console.log(res);
+                    layer.msg(res.font,{icon:res.code,time:2000},function(){
+                        //console.log(res);
+                        if(res.code==1){
+                            location.href="{:url('Address/address')}";
+                        }else{
+                            return false;
+                        }
+                    });
+                }
+                ,'json'
+            )
+        })
+    
+    
+    })
+})
+</script>

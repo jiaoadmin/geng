@@ -1,0 +1,43 @@
+<div class="layui-side layui-bg-black">
+    <div class="layui-side-scroll">
+      {/*左侧导航区域（可配合layui已有的垂直导航）*/}
+      <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+        <li class="layui-nav-item"  id="d">
+          <a href="javascript:;">管理员管理</a>
+          <dl class="layui-nav-child">
+            <dd id="d1"><a href="{:url('Admin/adminAdd')}">管理员添加</a></dd>
+            <dd  id="d2"><a href="{:url('Admin/adminList')}">管理员展示</a></dd>
+          </dl>
+        </li>
+
+        <li class="layui-nav-item" id="b">
+          <a href="javascript:;">品牌管理</a>
+          <dl class="layui-nav-child">
+            <dd id="b1"><a href="{:url('Brand/brandAdd')}">品牌添加</a></dd>
+            <dd id="b2"><a href="{:url('Brand/brandList')}">品牌展示</a></dd>
+          </dl>
+        </li>
+
+        <li class="layui-nav-item" id="a">
+          <a class="" href="javascript:;">分类管理</a>
+          <dl class="layui-nav-child">
+            <dd id="a1"><a href="{:url('Category/cateAdd')}">分类添加</a></dd>
+            <dd id="a2"><a href="{:url('Category/cateList')}">分类展示</a></dd>
+          </dl>
+        </li>
+
+        <li class="layui-nav-item"  id="c">
+          <a href="javascript:;">商品管理</a>
+          <dl class="layui-nav-child">
+            <dd id="c1"><a href="{:url('Goods/goodsAdd')}">商品添加</a></dd>
+            <dd id="c2"><a href="{:url('Goods/goodsList')}">商品展示</a></dd>
+          </dl>
+        </li>
+
+      
+
+              
+
+      </ul>
+    </div>
+</div>

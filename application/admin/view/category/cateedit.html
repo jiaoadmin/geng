@@ -1,0 +1,112 @@
+
+<div style="padding: 15px; width:500px">
+    <form class="layui-form" action="">
+    	<input type="hidden" name="cate_id" value="{$data.cate_id}">
+        <div class="layui-form-item">
+            <label class="layui-form-label">分类名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="cate_name" required lay-verify="required|checkName"  placeholder="请输入分类名称" value="{$data.cate_name}" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">是否展示</label>
+            <div class="layui-input-block">
+            	
+            	{if condition="$data.cate_show eq '√'"}
+                <input type="radio" name="cate_show" value="1" title="是" checked>
+                <input type="radio" name="cate_show" value="2" title="否">
+                {else /}
+                <input type="radio" name="cate_show" value="1" title="是">
+                <input type="radio" name="cate_show" value="2" title="否" checked>
+                {/if}
+                
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">是否导航栏展示</label>
+            <div class="layui-input-block">
+            	
+            	{if condition="$data.cate_navshow eq '√'"}
+                <input type="radio" name="cate_navshow" value="1" title="是" checked>
+                <input type="radio" name="cate_navshow" value="2" title="否">
+                {else /}
+                <input type="radio" name="cate_navshow" value="1" title="是">
+                <input type="radio" name="cate_navshow" value="2" title="否" checked>
+                {/if}
+               
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">父分类</label>
+            <div class="layui-input-block">
+                <select name="pid" lay-verify="required">
+                    <option value="0">--请选择--</option> 
+                    {volist name="cateInfo" id="v"}
+					{if condition="$data['pid'] eq $v['cate_id']"}
+                    <option value="{$v.cate_id}" selected>{:str_repeat('&nbsp;&nbsp;',$v['level']*3)}{$v.cate_name}</option>
+                    {else /}
+                    <option value="{$v.cate_id}">{:str_repeat('&nbsp;&nbsp;',$v['level']*3)}{$v.cate_name}</option>
+					{/if}
+                    {/volist}
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    $(function(){
+        layui.use(['form','layer'],function(){
+            var form = layui.form;
+            var layer = layui.layer;
+
+            //表单验证
+            form.verify({
+              checkName: function(value,item){
+               
+                var cate_id = $('#cate_id').val();
+                var name_flag;                
+                  //ajax请求
+                  $.ajax({
+                    url:"{:url('Category/checkName')}",
+                    method:'post',
+                    data:{cate_name:value,type:2,cate_id:cate_id},
+                    //async true代表异步 false代表同步
+                    async:false,
+                    success:function(res){
+                      if (res=="no") {
+                        name_flag = "分类名称已存在";
+                      }
+                    }
+                  })
+                  return name_flag;
+                }
+                           
+            });
+
+            /*监听提交 提交数据*/
+            form.on('submit(formDemo)', function(data){              
+                $.post(
+                "{:url('Category/cateEditDo')}",
+                data.field,
+                    function(res){
+                    layer.msg(res.font,{icon:res.code,time:2000},function(){
+                        if(res.code==1) {
+                         	location.href= "{:url('Category/cateList')}";	
+                        }
+                      });                 
+                    },
+                    'json'
+                );
+              return false;
+            });
+        });
+    })
+</script>
+
+

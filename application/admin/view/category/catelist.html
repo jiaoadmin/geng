@@ -1,0 +1,135 @@
+<div style="padding: 15px; width:900px">
+    <table class="layui-table">
+        <colgroup>
+            <col width="150">
+            <col width="200">
+            <col>
+        </colgroup>
+        <thead>
+        <tr>
+            <th>分类ID</th>
+            <th>分类名称</th>.
+            <th>是否展示</th>
+            <th>是否导航栏展示</th>
+            <th>添加时间</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody id='show'>
+            {volist name="arr" id="v"}
+            <tr pid="{$v.pid}" cate_id="{$v.cate_id}" style="display:none">            
+                <td>
+                    {:str_repeat('&nbsp;&nbsp;',$v['level']*3)}
+                    <a href="javascript:;" class="flag">+</a>
+                    {$v.cate_id}
+                </td>
+                <td>
+                    {:str_repeat('&nbsp;&nbsp;',$v['level']*3)}
+                    <span class="showInput">{$v.cate_name}</span>
+                    <input type="text" class="change" style="display:none" column="cate_name" cate_id="{$v.cate_id}" value="{$v.cate_name}">
+                </td>
+                <td column="cate_show" class="td_test">{$v.cate_show}</td>
+                <td column="cate_navshow" class="td_test">{$v.cate_navshow}</td>
+                <td>{$v.create_time}</td>
+                <td>
+                    <a href="{:url('Category/cateDel')}?cate_id={$v.cate_id}">删除</a>
+                    <a href="{:url('Category/cateEdit')}?cate_id={$v.cate_id}">修改</a>
+                </td>
+            </tr>
+            {/volist}
+        </tbody>
+    </table>
+</div>
+<script>  
+    $(function(){
+      layui.use('layer', function(){
+        var layer = layui.layer;
+        var _show = $('#show').children('tr[pid=0]').show();
+        //给符号绑定点击事件
+        $(document).on('click','.flag',function(){
+            var _this = $(this);           
+            var sign = _this.text();
+            var cate_id = _this.parents("tr").attr("cate_id");
+            // console.log(cate_id);
+            // console.log(sign);
+            if(sign == '+'){
+                var _children = $('#show').children("tr[pid="+cate_id+"]");
+                if(_children.length>0){
+                    _children.show();
+                    _this.text('-');
+                }else{
+                    _this.text('');
+                }                
+               
+            }else{
+                _this.text('+');
+                trHide(cate_id);                             
+            }
+        });
+        //递归收缩
+        function trHide(cate_id){
+            var _tr =  $('#show').children("tr[pid="+cate_id+"]");
+            _tr.each(function(index){
+                var c_id = $(this).attr('cate_id');
+                trHide(c_id);
+            });
+            _tr.hide();
+            _tr.find("a[class='flag']").text('+');
+        }
+        //即点即改
+        //给类为showInput 添加点击事件
+        $(document).on('click','.showInput',function(){
+            $(this).next('input').show();
+            $(this).hide();
+        });
+        $(document).on('blur','.change',function(){
+            var _this = $(this);
+            var column = _this.attr('column');
+            var cate_id = _this.attr('cate_id');
+            var value = _this.val();            
+            $.post(
+                "{:url('Category/cateChange')}",
+                {column:column,cate_id:cate_id,value:value},
+                function(res){
+                    layer.msg(res.font,{icon:res.code});
+                    if(res.code == 1){
+                        _this.hide();
+                        _this.prev('span').html(value);
+                        _this.prev('span').show();
+                    }
+                },
+                'json'
+            );
+        });
+        //状态栏即点即改
+        $(document).on('click','.td_test',function(){        
+            var _this = $(this);
+            var column = _this.attr('column');
+            var cate_id = _this.parent().attr('cate_id');
+            var value = _this.text();
+            if(value == '√'){
+                value=2
+            }else{
+                value=1
+            }
+            $.post(
+                "{:url('Category/cateChange')}",
+                {column:column,cate_id:cate_id,value:value},
+                function(res){
+                    layer.msg(res.font,{icon:res.code});
+                    if(res.code == 1){
+                       if(value == 1){
+                            _this.text('√');
+                       }else{
+                            _this.text('×');
+                       }
+                    }
+                },
+                'json'
+            );
+        });
+        
+      });
+    })
+
+</script>
